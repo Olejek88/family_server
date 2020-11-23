@@ -124,7 +124,7 @@ class m200604_152551_base_schema_v1_creation extends Migration
         );
 
         $this->addForeignKey(
-            'fk-routes-userId',
+            'fk-register-userId',
             self::REGISTER,
             'userId',
             self::USER,

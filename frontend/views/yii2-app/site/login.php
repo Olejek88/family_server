@@ -23,8 +23,7 @@ $fieldOptions2 = [
                 <div class="login-logo text-center">
                     <h4>
                         <a href="/" style=" color: #333; text-decoration: none;">
-                            <b><?php echo Yii::t('app', 'ПолиТЭР') ?></b><?php
-                            echo Yii::t('app', 'ервис') ?>
+                            <b><?php echo Yii::t('app', 'Family Finder') ?></b>
                         </a>
                     </h4>
                 </div>
@@ -36,22 +35,27 @@ $fieldOptions2 = [
 
                     <?= $form
                         ->field($model, 'username', $fieldOptions1)
-                        ->label(Yii::t('app', 'Имя пользователя'))
-                        ->textInput(['placeholder' => $model->getAttributeLabel(Yii::t('app', 'Введите имя'))]) ?>
+                        ->label(Yii::t('app', 'Login'))
+                        ->textInput(['placeholder' => $model->getAttributeLabel(Yii::t('app', 'Login enter'))]) ?>
 
                     <?= $form
                         ->field($model, 'password', $fieldOptions2)
-                        ->label(Yii::t('app', 'Пароль'))
-                        ->passwordInput(['placeholder' => $model->getAttributeLabel(Yii::t('app', 'Введите пароль'))]) ?>
+                        ->label(Yii::t('app', 'Password'))
+                        ->passwordInput(['placeholder' => $model->getAttributeLabel(Yii::t('app', 'Password input'))]) ?>
 
                     <div class="row">
-                        <div class="col-xs-8">
+                        <div class="col-xs-4">
                             <?= $form->field($model, 'rememberMe')
-                                ->checkbox(['label' => Yii::t('app', 'Запомнить'),]) ?>
+                                ->checkbox(['label' => Yii::t('app', 'Remember'),]) ?>
                         </div>
 
                         <div class="col-xs-4">
-                            <?= Html::submitButton(Yii::t('app', 'Вход'), ['class' => 'btn btn-primary btn-block btn-flat', 'name' => 'login-button']) ?>
+                            <?= Html::submitButton(Yii::t('app', 'Enter'), ['class' => 'btn btn-primary btn-block btn-flat', 'name' => 'login-button']) ?>
+                        </div>
+                        <div class="col-xs-4">
+                            <?=
+                            Html::a('Register', '/signup', ['class' => 'btn btn-info btn-block btn-flat', 'name' => 'login-button'])
+                            ?>
                         </div>
 
                     </div>

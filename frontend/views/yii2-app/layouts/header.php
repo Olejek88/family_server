@@ -18,7 +18,7 @@ $userImage = $currentUser->getImageUrl();
 
 <header class="main-header">
 
-    <?= Html::a('<span class="logo-mini">П</span><span class="logo-lg">' . Yii::$app->name = '' . Yii::t('app', 'Система') . '</span>',
+    <?= Html::a('<span class="logo-mini">F</span><span class="logo-lg">' . Yii::$app->name = '' . Yii::t('app', 'Family') . '</span>',
         Yii::$app->homeUrl, ['class' => 'logo']) ?>
     <nav class="navbar navbar-static-top">
         <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button" style="padding: 15px 15px">
@@ -26,10 +26,6 @@ $userImage = $currentUser->getImageUrl();
         </a>
         <div class="navbar-custom-menu" style="padding-top: 0; padding-bottom: 0">
             <ul class="nav navbar-nav">
-                <?php
-                if (Yii::$app->user->can(User::PERMISSION_ADMIN))
-                    echo $this->render('header_timeline');
-                ?>
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <?php
@@ -37,7 +33,7 @@ $userImage = $currentUser->getImageUrl();
                         ?>
                         <span class="hidden-xs">
                             <?php
-                            if ($currentUser) echo $currentUser['name'];
+                            if ($currentUser) echo $currentUser['username'];
                             ?>
                         </span>
                     </a>
@@ -50,8 +46,6 @@ $userImage = $currentUser->getImageUrl();
                             <p>
                                 <?php
                                 if ($currentUser) echo $currentUser['username'];
-                                if ($currentUser) echo '<small>' . $currentUser['name'] . '</small>';
-
                                 ?>
                             </p>
                         </li>

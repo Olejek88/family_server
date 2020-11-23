@@ -13,7 +13,6 @@ class AccessModel extends Model
     public $permission;
     public $admin = false;
     public $user = false;
-    public $operator = false;
     public $description;
 
     function getValue($model, $role)

@@ -50,14 +50,14 @@ class SignupForm extends Model
         if (!$this->validate()) {
             return null;
         }
-
         $user = new User();
         $user->email = $this->email;
+        $user->username = $this->username;
         $user->setPassword($this->password);
+        $user->status = User::STATUS_ACTIVE;
         $user->generateAuthKey();
         $user->generateEmailVerificationToken();
-        return $user->save() && $this->sendEmail($user);
-
+        return $user->save();
     }
 
     /**

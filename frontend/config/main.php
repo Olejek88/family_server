@@ -58,6 +58,7 @@ return [
                 '/' => 'site/dashboard',
                 '/timeline' => 'site/timeline',
                 '/login' => 'site/login',
+                '/signup' => 'site/signup',
                 '/logout' => 'site/logout',
                 '<controller>/<id:\d+>' => '<controller>/create',
                 '<controller>/<id:\d+>' => '<controller>/delete',

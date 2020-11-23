@@ -81,7 +81,6 @@ class AccessSearch extends AccessModel
                         $accessModel->$roleName = true;
                     }
                 }
-
                 $data[] = $accessModel;
             }
         }
@@ -95,33 +94,6 @@ class AccessSearch extends AccessModel
         $dataProvider->pagination = [
             'pageSize' => 20,
         ];
-
-//        $query = ActionType::find();
-//
-//        // add conditions that should always apply here
-//
-//        $dataProvider = new ActiveDataProvider([
-//            'query' => $query,
-//        ]);
-//
-//        $this->load($params);
-//
-//        if (!$this->validate()) {
-//            // uncomment the following line if you do not want to return any records when validation fails
-//            // $query->where('0=1');
-//            return $dataProvider;
-//        }
-//
-//        // grid filtering conditions
-//        $query->andFilterWhere([
-//            '_id' => $this->_id,
-//            'title' => $this->title,
-//            'createdAt' => $this->createdAt,
-//            'changedAt' => $this->changedAt,
-//        ]);
-//
-//        $query->andFilterWhere(['like', 'uuid', $this->uuid]);
-
         return $dataProvider;
     }
 }
