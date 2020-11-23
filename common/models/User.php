@@ -40,6 +40,7 @@ class User extends FamilyModel implements IdentityInterface
     const STATUS_INACTIVE = 9;
     const STATUS_ACTIVE = 10;
     private static $_IMAGE_ROOT = 'users';
+    public $upload;
 
     /**
      * {@inheritdoc}
@@ -220,6 +221,7 @@ class User extends FamilyModel implements IdentityInterface
 
     /**
      * Generates "remember me" authentication key
+     * @throws Exception
      */
     public function generateAuthKey()
     {
@@ -228,6 +230,7 @@ class User extends FamilyModel implements IdentityInterface
 
     /**
      * Generates new password reset token
+     * @throws Exception
      */
     public function generatePasswordResetToken()
     {
@@ -236,6 +239,7 @@ class User extends FamilyModel implements IdentityInterface
 
     /**
      * Generates new token for email verification
+     * @throws Exception
      */
     public function generateEmailVerificationToken()
     {

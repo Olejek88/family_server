@@ -2,8 +2,10 @@
 
 namespace frontend\controllers;
 
+use api\controllers\TokenController;
 use common\components\MainFunctions;
 use common\models\Register;
+use common\models\Token;
 use common\models\User;
 use Exception;
 use frontend\models\Role;
@@ -540,4 +542,28 @@ class UserController extends ParentController
             ]
         );
     }
+
+    /**
+     * Возвращает объект Users по токену.
+     *
+     * @param string $token Токен.
+     *
+     * @return User|null Оъект пользователя.
+     */
+    public static function getUserByToken($token)
+    {
+        if (TokenController::isTokenValid($token)) {
+            $tokens = Token::find()->where(['accessToken' => $token])->all();
+            if (count($tokens) == 1) {
+                $users = User::find()->where(['id' => $tokens[0]->id])->all();
+                $user = count($users) == 1 ? $users[0] : null;
+                return $user;
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
 }
