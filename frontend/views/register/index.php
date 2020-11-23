@@ -1,7 +1,6 @@
 <?php
 /* @var $searchModel frontend\models\RegisterSearch */
 
-use kartik\date\DatePicker;
 use kartik\grid\GridView;
 use yii\widgets\ActiveForm;
 

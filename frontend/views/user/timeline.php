@@ -6,9 +6,6 @@
 
 /* @var $id integer */
 
-use kartik\select2\Select2;
-use yii\helpers\Html;
-
 $this->title = Yii::t('app', 'Лента событий пользователя');
 ?>
 
@@ -17,36 +14,7 @@ $this->title = Yii::t('app', 'Лента событий пользователя
     <section class="content-header">
         <h1>
             <?php echo Yii::t('app', 'Лента действий пользователя') ?>
-            <small><?php echo Yii::t('app', 'изменения параметров, редактирование объектов') ?></small>
         </h1>
-        <form action="/users/timeline?id=<?= $id ?>">
-            <table style="width: 400px; padding: 3px">
-                <tr>
-                    <td style="width: 300px">
-                        <?php
-                        echo Select2::widget([
-                                'id' => 'type',
-                                'name' => 'type',
-                                'value' => $type,
-                                'language' => Yii::t('app', 'ru'),
-                                'data' => [
-                                    Yii::t('app', 'Все события'),
-                                    Yii::t('app', 'Параметры')
-                                ],
-                                'options' => ['placeholder' => Yii::t('app', 'Тип события')],
-                                'pluginOptions' => [
-                                    'allowClear' => true
-                                ],
-                            ]) .
-                            Html::hiddenInput('id', $id)
-                            . '</td><td>&nbsp;</td><td style="width: 100px">' .
-                            Html::submitButton(Yii::t('app', 'Выбрать'),
-                                ['class' => 'btn btn-success']) . '';
-                        ?>
-                    </td>
-                </tr>
-            </table>
-        </form>
     </section>
 
     <section class="content">

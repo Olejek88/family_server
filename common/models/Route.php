@@ -29,7 +29,7 @@ class Route extends FamilyModel
      */
     public static function tableName()
     {
-        return 'route';
+        return 'routes';
     }
 
     /**

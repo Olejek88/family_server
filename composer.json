@@ -1,22 +1,11 @@
 {
-  "name": "yiisoft/yii2-app-advanced",
-  "description": "Yii 2 Advanced Project Template",
+  "name": "Family App",
+  "description": "Find your family members position",
   "keywords": [
-    "yii2",
-    "framework",
-    "advanced",
-    "project template"
   ],
-  "homepage": "http://www.yiiframework.com/",
+  "homepage": "http://olejek.site/",
   "type": "project",
   "license": "BSD-3-Clause",
-  "support": {
-    "issues": "https://github.com/yiisoft/yii2/issues?state=open",
-    "forum": "http://www.yiiframework.com/forum/",
-    "wiki": "http://www.yiiframework.com/wiki/",
-    "irc": "irc://irc.freenode.net/yii",
-    "source": "https://github.com/yiisoft/yii2"
-  },
   "minimum-stability": "stable",
   "require": {
     "php": ">=7.3.0",
@@ -30,10 +19,11 @@
     "2amigos/yii2-leaflet-extension": "~1.0",
     "2amigos/yii2-leaflet-geocoder-plugin": "~1.0.3",
     "2amigos/yii2-leaflet-markercluster-plugin": "~1.0",
-    "koputo/yii2-leaflet-subgroup-plugin": "dev-master",
     "ext-oci8": "*",
     "ext-PDO": "*",
     "ext-json": "*",
+    "koputo/yii2-leaflet-subgroup-plugin": "dev-master",
+    "wbraganca/yii2-fancytree-widget": "~1.0.1",
     "yii2-websocket-client/yii2-websocket-client": "^1.0"
   },
   "require-dev": {

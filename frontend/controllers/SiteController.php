@@ -5,8 +5,11 @@ namespace frontend\controllers;
 use common\components\MainFunctions;
 use common\models\LoginForm;
 use common\models\Register;
+use common\models\Route;
 use common\models\User;
 use dosamigos\leaflet\controls\Layers;
+use dosamigos\leaflet\layers\Marker;
+use dosamigos\leaflet\layers\PolyLine;
 use dosamigos\leaflet\layers\TileLayer;
 use dosamigos\leaflet\LeafLet;
 use dosamigos\leaflet\types\Icon;
@@ -14,6 +17,8 @@ use dosamigos\leaflet\types\LatLng;
 use dosamigos\leaflet\types\Point;
 use Exception;
 use frontend\models\SignupForm;
+use koputo\leaflet\plugins\subgroup\Subgroup;
+use koputo\leaflet\plugins\subgroup\SubgroupCluster;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -105,13 +110,9 @@ class SiteController extends Controller
         $leaflet->addLayer($tileLayer);
 
         $subGroupPlugin = new SubgroupCluster();
-        //$subGroupPlugin->addSubGroup($layer['objectGroup']);
-        $subGroupPlugin->addSubGroup($layer['regionGroup']);
-        $subGroupPlugin->addSubGroup($layer['alarmGroup']);
-
-        $subGroupPlugin->addSubGroup($layer['heatGroup']);
-        $subGroupPlugin->addSubGroup($layer['waterGroup']);
-        $subGroupPlugin->addSubGroup($layer['powerGroup']);
+        $subGroupPlugin->addSubGroup($layer['usersGroup']);
+        $subGroupPlugin = new SubgroupCluster();
+        $subGroupPlugin->addSubGroup($layer['waysGroup']);
         $layers->setOverlays([]);
 
         $layers->setName('ctrlLayer');
@@ -138,6 +139,7 @@ class SiteController extends Controller
     public
     function getLayers()
     {
+        $userData = array();
         $users = User::find()->where(['status' => User::STATUS_ACTIVE])->all();
         $userList[] = $users;
         $usersGroup = new SubGroup();
@@ -147,18 +149,29 @@ class SiteController extends Controller
         $waysGroup->setTitle(Yii::t('app', 'Маршруты:'));
 
         $userIcon = new Icon([
-            'iconUrl' => '/images/position_worker_m.png',
+            'iconUrl' => '/images/marker-icon.png',
             'iconSize' => new Point(['x' => 28, 'y' => 43]),
             'iconAnchor' => new Point (['x' => 14, 'y' => 43]),
             'popupAnchor' => new Point (['x' => -3, 'y' => -76])
         ]);
 
         $count = 0;
+
+        $coordinates = new LatLng(['lat' => 52.31, 'lng' => 13.24]);
+        foreach ($userData as $user) {
+            $position = new LatLng(['lat' => $user["latitude"], 'lng' => $user["longitude"]]);
+            $coordinates = $position;
+            $marker = new Marker(['latLng' => $position, 'popupContent' => '<b>'
+                . $user["username"] . '</b>']);
+            $marker->setIcon($userIcon);
+            $usersGroup->addLayer($marker);
+        }
+
         foreach ($users as $current_user) {
-            $userData[$count]['_id'] = $current_user['_id'];
+            $userData[$count]['_id'] = $current_user['id'];
             $userData[$count]['username'] = $current_user['username'];
 
-            $gpsQuery = Routes::find()
+            $gpsQuery = Route::find()
                 ->select('latitude, longitude, date')
                 ->where(['userId' => $current_user['id']])
                 ->limit(10000);
@@ -186,7 +199,7 @@ class SiteController extends Controller
         $cnt = 0;
         foreach ($userData as $user) {
             $wayGroup[$cnt] = new SubGroup();
-            $wayGroup[$cnt]->setTitle($user["name"]);
+            $wayGroup[$cnt]->setTitle($user["username"]);
             if (count($lats[$cnt]) > 0) {
                 $latLngs = [];
                 foreach ($lats[$cnt] as $lat) {

@@ -111,4 +111,15 @@ class MainFunctions
         fwrite($handle, $str);
         fclose($handle);
     }
+
+    /**
+     * Возвращает  случайный цвет в hex формате.
+     *
+     * @return string Цвет в hex формате.
+     * @throws \Exception
+     */
+    public static function random_color()
+    {
+        return MainFunctions::random_color_part() . MainFunctions::random_color_part() . MainFunctions::random_color_part();
+    }
 }

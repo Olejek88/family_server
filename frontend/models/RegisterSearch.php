@@ -12,33 +12,13 @@ use yii\data\ActiveDataProvider;
  */
 class RegisterSearch extends Register
 {
-    public $createTimeRange;
-    public $createTimeStart;
-    public $createTimeEnd;
-
-    /**
-     * @return array
-     */
-    public function behaviors()
-    {
-        return [
-            [
-                'class' => DateRangeBehavior::class,
-                'attribute' => 'createTimeRange',
-                'dateStartAttribute' => 'createTimeStart',
-                'dateEndAttribute' => 'createTimeEnd',
-            ]
-        ];
-    }
-
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['entityUuid', 'title', 'type', 'createdAt', 'createTimeStart', 'createTimeEnd'], 'safe'],
-            [['createTimeRange'], 'match', 'pattern' => '/^.+\s\-\s.+$/'],
+            [['title', 'createdAt'], 'safe']
         ];
     }
 
@@ -67,30 +47,11 @@ class RegisterSearch extends Register
             'sort' => ['defaultOrder' => ['createdAt' => SORT_DESC]]
         ]);
 
-        if (empty($this->createTimeStart)) {
-            $today = getdate();
-            $this->createTimeStart = sprintf("%d-%02d-%02d", $today['year'] - 1, $today['mon'], $today['mday']);
-        }
-
-        if (empty($this->createTimeEnd)) {
-            $this->createTimeEnd = date('Y-m-d', strtotime('+3 days'));
-        }
-
         $this->load($params);
 
         if (!$this->validate()) {
             return $dataProvider;
         }
-
-        // grid filtering conditions
-        $query->andFilterWhere([
-            'entityUuid' => $this->entityUuid,
-            'type' => $this->type
-        ]);
-
-        $query->andFilterWhere(['>=', 'createdAt', $this->createTimeStart])
-            ->andFilterWhere(['<', 'createdAt', $this->createTimeEnd]);
-
         $query->andFilterWhere(['like', 'title', $this->title]);
 
         return $dataProvider;

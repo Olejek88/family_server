@@ -4,7 +4,6 @@ namespace common\models;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
-use yii\db\ActiveRecord;
 use yii\db\Expression;
 
 /**
@@ -17,7 +16,7 @@ use yii\db\Expression;
  * @property string $changedAt
  * @property boolean $deleted
  */
-class Family extends ActiveRecord
+class Family extends FamilyModel
 {
     /**
      * @inheritdoc
@@ -68,5 +67,18 @@ class Family extends ActiveRecord
             'createdAt' => Yii::t('app', 'Создан'),
             'changedAt' => Yii::t('app', 'Изменен'),
         ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getPermissions()
+    {
+        $class = explode('\\', get_class($this));
+        $class = $class[count($class) - 1];
+
+        $perm = parent::getPermissions();
+        $perm['tree'] = 'tree' . $class;
+        return $perm;
     }
 }

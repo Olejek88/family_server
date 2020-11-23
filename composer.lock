@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "64bbc9fe5a12c26e2aacd356dc1e4883",
+    "content-hash": "02ba3bf6e761677d26c799eb37d9e5de",
     "packages": [
         {
             "name": "2amigos/yii2-leaflet-extension",
@@ -253,6 +253,29 @@
             ]
         },
         {
+            "name": "bower-asset/fancytree",
+            "version": "v2.37.0",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:mar10/fancytree.git",
+                "reference": "017c4163037eb22585a8f821e0e9cb853e27d020"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mar10/fancytree/zipball/017c4163037eb22585a8f821e0e9cb853e27d020",
+                "reference": "017c4163037eb22585a8f821e0e9cb853e27d020",
+                "shasum": null
+            },
+            "require": {
+                "bower-asset/jquery": ">=1.7",
+                "bower-asset/jquery-ui": ">=1.8.6"
+            },
+            "type": "bower-asset",
+            "license": [
+                "MIT"
+            ]
+        },
+        {
             "name": "bower-asset/inputmask",
             "version": "3.3.11",
             "source": {
@@ -287,6 +310,28 @@
                 "url": "https://api.github.com/repos/jquery/jquery-dist/zipball/4c0e4becb8263bb5b3e6dadc448d8e7305ef8215",
                 "reference": "4c0e4becb8263bb5b3e6dadc448d8e7305ef8215",
                 "shasum": null
+            },
+            "type": "bower-asset",
+            "license": [
+                "MIT"
+            ]
+        },
+        {
+            "name": "bower-asset/jquery-ui",
+            "version": "1.12.1",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:components/jqueryui.git",
+                "reference": "44ecf3794cc56b65954cc19737234a3119d036cc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/components/jqueryui/zipball/44ecf3794cc56b65954cc19737234a3119d036cc",
+                "reference": "44ecf3794cc56b65954cc19737234a3119d036cc",
+                "shasum": null
+            },
+            "require": {
+                "bower-asset/jquery": ">=1.6"
             },
             "type": "bower-asset",
             "license": [
@@ -1200,6 +1245,44 @@
             "time": "2020-09-25T17:53:07+00:00"
         },
         {
+            "name": "koputo/yii2-leaflet-subgroup-plugin",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/demonwork/yii-leaflet-subgroup-plugin.git",
+                "reference": "6af84dc0d98d6a81b2a00d003e9a1b8d8d6dcb0a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/demonwork/yii-leaflet-subgroup-plugin/zipball/6af84dc0d98d6a81b2a00d003e9a1b8d8d6dcb0a",
+                "reference": "6af84dc0d98d6a81b2a00d003e9a1b8d8d6dcb0a",
+                "shasum": ""
+            },
+            "require": {
+                "2amigos/yii2-leaflet-extension": "~1.0",
+                "2amigos/yii2-leaflet-markercluster-plugin": "~1.0",
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Dmitriy Logachev",
+                    "email": "demonwork@yandex.ru"
+                }
+            ],
+            "description": "Subgroup cluster",
+            "time": "2020-05-29T16:45:43+00:00"
+        },
+        {
             "name": "rmrevin/yii2-fontawesome",
             "version": "2.17.1",
             "source": {
@@ -1674,6 +1757,57 @@
             "time": "2020-10-23T14:02:19+00:00"
         },
         {
+            "name": "wbraganca/yii2-fancytree-widget",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wbraganca/yii2-fancytree-widget.git",
+                "reference": "97fd3b72aacb067efce839076f8000d43dd06cae"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/wbraganca/yii2-fancytree-widget/zipball/97fd3b72aacb067efce839076f8000d43dd06cae",
+                "reference": "97fd3b72aacb067efce839076f8000d43dd06cae",
+                "shasum": ""
+            },
+            "require": {
+                "bower-asset/fancytree": ">=2.12",
+                "yiisoft/yii2": "*",
+                "yiisoft/yii2-jui": "*"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "asset-installer-paths": {
+                    "npm-asset-library": "vendor/npm",
+                    "bower-asset-library": "vendor/bower"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "wbraganca\\fancytree\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Wanderson Bragança",
+                    "email": "wanderson.wbc@gmail.com"
+                }
+            ],
+            "description": "The yii2-fancytree widget is a Yii 2 wrapper for the [Fancytree](https://github.com/mar10/fancytree). A JavaScript dynamic tree view plugin for jQuery with support for persistence, keyboard, checkboxes, tables, drag'n'drop, and lazy loading",
+            "keywords": [
+                "fancytree",
+                "treeview",
+                "wbraganca",
+                "yii2",
+                "yii2-fancytree-widget"
+            ],
+            "time": "2015-11-08T14:15:16+00:00"
+        },
+        {
             "name": "yii2-websocket-client/yii2-websocket-client",
             "version": "1.0",
             "source": {
@@ -1932,6 +2066,52 @@
                 "yii2"
             ],
             "time": "2020-06-24T00:04:01+00:00"
+        },
+        {
+            "name": "yiisoft/yii2-jui",
+            "version": "2.0.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yiisoft/yii2-jui.git",
+                "reference": "ce45c16d4fbbe7d1c516d8d0e8311e07f6138eed"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/yiisoft/yii2-jui/zipball/ce45c16d4fbbe7d1c516d8d0e8311e07f6138eed",
+                "reference": "ce45c16d4fbbe7d1c516d8d0e8311e07f6138eed",
+                "shasum": ""
+            },
+            "require": {
+                "bower-asset/jquery-ui": "~1.12.1",
+                "yiisoft/yii2": "~2.0.4"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "yii\\jui\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Qiang Xue",
+                    "email": "qiang.xue@gmail.com"
+                }
+            ],
+            "description": "The Jquery UI extension for the Yii framework",
+            "keywords": [
+                "jQuery UI",
+                "yii2"
+            ],
+            "time": "2017-11-25T15:32:29+00:00"
         },
         {
             "name": "yiisoft/yii2-swiftmailer",
@@ -2555,16 +2735,16 @@
         },
         {
             "name": "fakerphp/faker",
-            "version": "v1.11.0",
+            "version": "v1.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FakerPHP/Faker.git",
-                "reference": "f228dc5112bafc14c77d40a2acc0c48058e184b0"
+                "reference": "9aa6c9e289860951e6b4d010c7a841802d015cd8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FakerPHP/Faker/zipball/f228dc5112bafc14c77d40a2acc0c48058e184b0",
-                "reference": "f228dc5112bafc14c77d40a2acc0c48058e184b0",
+                "url": "https://api.github.com/repos/FakerPHP/Faker/zipball/9aa6c9e289860951e6b4d010c7a841802d015cd8",
+                "reference": "9aa6c9e289860951e6b4d010c7a841802d015cd8",
                 "shasum": ""
             },
             "require": {
@@ -2599,7 +2779,7 @@
                 "faker",
                 "fixtures"
             ],
-            "time": "2020-11-15T20:27:00+00:00"
+            "time": "2020-11-23T09:33:08+00:00"
         },
         {
             "name": "guzzlehttp/psr7",
@@ -5439,7 +5619,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "kartik-v/yii2-grid": 20
+        "kartik-v/yii2-grid": 20,
+        "koputo/yii2-leaflet-subgroup-plugin": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
