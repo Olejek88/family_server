@@ -1,9 +1,10 @@
 <?php
 
-namespace frontend\models;
+namespace api\models;
 
 use common\models\User;
 use Yii;
+use yii\base\Exception;
 use yii\base\Model;
 
 /**
@@ -36,7 +37,7 @@ class SignupForm extends Model
                 'message' => Yii::t('app', 'К этому email уже привязан токен.')],
 
             ['password', 'required'],
-            ['password', 'string', 'min' => 6],
+            ['password', 'string', 'min' => 3],
         ];
     }
 
@@ -44,6 +45,7 @@ class SignupForm extends Model
      * Signs user up.
      *
      * @return User|null the saved model or null if saving fails
+     * @throws Exception
      */
     public function signup()
     {
@@ -56,7 +58,8 @@ class SignupForm extends Model
         $user->email = $this->email;
         $user->setPassword($this->password);
         $user->generateAuthKey();
-
+        $user->status = User::STATUS_ACTIVE;
+        $user->generateEmailVerificationToken();
         return $user->save() ? $user : null;
     }
 }

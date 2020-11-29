@@ -2,7 +2,7 @@
 
 /* @var $this yii\web\View */
 
-$this->title = 'Api ToirServer'; ?>
+$this->title = 'Api Server'; ?>
 
 <div class="site-index">
 
@@ -13,8 +13,7 @@ $this->title = 'Api ToirServer'; ?>
                 <div class="col-md-2"></div>
                 <div class="col-md-8">
                     <h4 class="text-left">
-                        С помощью Toir API вы можете использовать функциональные возможности Toir для своего сайта или
-                        приложения.
+                        With API you can access data from server.
                     </h4>
                 </div>
                 <div class="col-md-2"></div>

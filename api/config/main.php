@@ -37,7 +37,7 @@ return [
             ],
         ],
         'errorHandler' => [
-            'errorAction' => 'manual/site/error',
+            'errorAction' => 'site/error',
         ],
 
         'urlManager' => [
@@ -45,7 +45,10 @@ return [
             'showScriptName' => false,
             'rules' => [
                 // rules for your project
-                '/' => 'manual/site/index',
+                '/' => 'site/index',
+                '/register' => 'site/register',
+                '/login' => 'site/login',
+                '/logout' => 'site/logout',
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'routes'],
             ],
         ],

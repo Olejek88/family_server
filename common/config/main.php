@@ -10,8 +10,5 @@ return [
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
-        'authManager' => [
-            'class' => 'console\controllers\DbManager',
-        ],
     ],
 ];
