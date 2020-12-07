@@ -6,6 +6,7 @@ use api\models\SignupForm;
 use common\models\LoginForm;
 use Yii;
 use yii\base\Exception;
+use yii\base\InvalidConfigException;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\rest\Controller;
@@ -23,7 +24,7 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['logout', 'login', 'register'],
+                'only' => ['login', 'register'],
                 'rules' => [
                     [
                         'actions' => ['register'],
@@ -34,11 +35,6 @@ class SiteController extends Controller
                         'actions' => ['login'],
                         'allow' => true,
                         'roles' => ['?'],
-                    ],
-                    [
-                        'actions' => ['logout'],
-                        'allow' => true,
-                        'roles' => ['@'],
                     ],
                 ],
             ],
@@ -83,21 +79,30 @@ class SiteController extends Controller
      * Logs in a user.
      *
      * @return mixed
+     * @throws InvalidConfigException
      */
     public function actionLogin()
     {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-
         $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        } else {
-            return $this->render('login', [
-                'model' => $model,
-            ]);
+        $request = Yii::$app->request->getBodyParams();
+        $model->email = $request["email"];
+        $model->password = $request["password"];
+        if ($user = $model->login()) {
+            $answer[] = 0;
+            $answer["status_code"] = 0;
+            $answer["user_id"] = $user->id;
+            $answer["message"] = "user successfully login";
+            $answer["email"] = $user->email;
+            $answer["user_name"] = $user->username;
+            $answer["access_token"] = $user->verification_token;
+            return json_encode($answer);
         }
+        $answer["status_code"] = -1;
+        $answer["user_id"] = -1;
+        $answer["message"] = json_encode($model->errors);
+        $answer["email"] = "";
+        $answer["access_token"] = null;
+        return json_encode($answer);
     }
 
     /**
@@ -108,8 +113,9 @@ class SiteController extends Controller
     public function actionLogout()
     {
         Yii::$app->user->logout();
-
-        return $this->goHome();
+        $answer["status_code"] = 0;
+        $answer["message"] = "user successfully log out";
+        return json_encode($answer);
     }
 
     /**
