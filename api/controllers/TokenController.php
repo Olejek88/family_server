@@ -114,23 +114,17 @@ class TokenController extends Controller
             throw new NotAcceptableHttpException();
         }
 
-        $tokenType = $request->post('grant_type');
-        // TODO: пароль и ид метки в открытом виде гонять не целесообразно,
-        // нужно что-то придумать!
-        $password = $request->post($tokenType);
-
-        // находим пользователя с таким паролем
-        $user = self::getUser($tokenType, $password);
+        $userId = $request->post('userId');
+        $user = self::getUser($userId);
         if ($user == null) {
             throw new UnauthorizedHttpException();
         }
 
-        $token = Token::findOne(['id' => $user->_id]);
+        $token = Token::findOne(['id' => $user->id]);
         if ($token != null) {
             $start = time();
             $end = $start + 86400;
             $token->accessToken = Token::initToken();
-            $token->tokenType = $tokenType;
             $token->expiresIn = $end;
             $token->userName = $user->email;
             $token->issued = date('Y-m-d\TH:i:s', $start);
@@ -139,44 +133,30 @@ class TokenController extends Controller
         } else {
             // создаём токен
             $token = self::createToken(
-                $user->email, $user->id, $tokenType
+                $user->email, $user->id
             );
 
             if ($token == null) {
                 throw new HttpException(500, Yii::t('app', 'Ошибка получения токена!'));
             }
         }
-
-        return $token;
+        $answer[] = 0;
+        $answer["status_code"] = 0;
+        $answer["message"] = "";
+        $answer["token"] = $token->accessToken;
+        return $answer;
     }
 
     /**
      * Возвращает пользователя по паролю либо метке.
      *
-     * @param string $tokenType Тип токена (label, password)
-     * @param string $password Ид метки или пароль.
-     *
+     * @param $userId
      * @return User
-     * @throws NotAcceptableHttpException
-     * @throws HttpException
      */
-    public static function getUser($tokenType, $password)
+    public static function getUser($userId)
     {
         $condition = null;
-        switch ($tokenType) {
-            case 'label':
-                $condition = ['id' => $password];
-                break;
-            case 'password':
-                $condition = ['pass' => $password];
-                break;
-            default:
-                throw new NotAcceptableHttpException();
-        }
-
-        // пользователь обязательно должен быть 'активным'
-        $condition['active'] = 1;
-        $users = User::find()->where($condition)->all();
+        $users = User::find()->where(['id' => $userId])->all();
         if (count($users) > 1) {
             return null;
         } else if (count($users) == 1) {
@@ -191,16 +171,14 @@ class TokenController extends Controller
      *
      * @param string $login Login пользователя.
      * @param string $id Id метки.
-     * @param string $tokenType Тип токена (label | password)
-     *
      * @return Token | null
      * @throws \Exception
      */
-    public static function createToken($login, $id, $tokenType)
+    public static function createToken($login, $id)
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
-        if ($login == null || $id == null || $tokenType == null) {
+        if ($login == null || $id == null) {
             return null;
         }
 
@@ -208,9 +186,9 @@ class TokenController extends Controller
         $end = $start + 86400;
 
         $token = new Token();
-        $token->id = $id;
+        $token->id = sprintf("%s", $id);
         $token->accessToken = Token::initToken();
-        $token->tokenType = $tokenType;
+        $token->tokenType = "rest";
         $token->expiresIn = $end;
         $token->userName = $login;
         $token->issued = date('Y-m-d\TH:i:s', $start);
@@ -219,7 +197,6 @@ class TokenController extends Controller
         if (!$token->save()) {
             return null;
         }
-
         return $token;
     }
 }

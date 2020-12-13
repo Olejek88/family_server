@@ -96,7 +96,6 @@ class Token extends FamilyModel
             [['expiresIn'], 'integer'],
             [
                 [
-                    'id',
                     'accessToken',
                     'tokenType',
                     'userName',

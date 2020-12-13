@@ -12,10 +12,10 @@ class m201123_175217_add_token extends Migration
         $this->createTable('{{%token}}', [
             'id' => 'VARCHAR(128) NOT NULL',
             0 => 'PRIMARY KEY (`id`)',
-            'access_token' => 'VARCHAR(128) NOT NULL',
-            'token_type' => 'VARCHAR(128) NOT NULL',
-            'expires_in' => 'INT(10) UNSIGNED NOT NULL',
-            'usersName' => 'VARCHAR(128) NOT NULL',
+            'accessToken' => 'VARCHAR(128) NOT NULL',
+            'tokenType' => 'VARCHAR(128) NOT NULL',
+            'expiresIn' => 'INT(10) UNSIGNED NOT NULL',
+            'userName' => 'VARCHAR(128) NOT NULL',
             'issued' => 'VARCHAR(128) NOT NULL',
             'expires' => 'VARCHAR(128) NOT NULL',
         ], null);

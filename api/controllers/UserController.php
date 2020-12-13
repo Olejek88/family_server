@@ -136,7 +136,15 @@ class UserController extends Controller
                     $success = false;
                 }
             }
-            return ['success' => $success, 'data' => $saved];
+            $answer[] = 0;
+            if ($success) {
+                $answer["status_code"] = 0;
+                $answer["message"] = "user successfully saved";
+            } else {
+                $answer["status_code"] = -1;
+                $answer["message"] = "error";
+            }
+            return json_encode($answer);
         } else {
             throw new NotAcceptableHttpException();
         }

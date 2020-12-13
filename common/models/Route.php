@@ -3,9 +3,7 @@
 namespace common\models;
 
 use Yii;
-use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
-use yii\db\Expression;
 
 /**
  * This is the model class for table "route".
@@ -30,23 +28,6 @@ class Route extends FamilyModel
     public static function tableName()
     {
         return 'routes';
-    }
-
-    /**
-     * Behaviors
-     *
-     * @return array
-     */
-    public function behaviors()
-    {
-        return [
-            [
-                'class' => TimestampBehavior::class,
-                'createdAtAttribute' => 'createdAt',
-                'updatedAtAttribute' => 'changedAt',
-                'value' => new Expression('NOW()'),
-            ],
-        ];
     }
 
     /**
@@ -88,9 +69,7 @@ class Route extends FamilyModel
             'latitude' => Yii::t('app', 'Широта'),
             'longitude' => Yii::t('app', 'Долгота'),
             'userId' => Yii::t('app', 'Пользователь'),
-            'date' => Yii::t('app', 'Дата'),
-            'createdAt' => Yii::t('app', 'Создан'),
-            'changedAt' => Yii::t('app', 'Изменен'),
+            'date' => Yii::t('app', 'Дата')
         ];
     }
 

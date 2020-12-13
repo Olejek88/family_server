@@ -7,11 +7,12 @@ use common\models\Token;
 use common\models\User;
 use Yii;
 use yii\base\Exception;
+use yii\base\InvalidConfigException;
 use yii\rest\ActiveController;
 use yii\web\Response;
 use yii\web\UnauthorizedHttpException;
 
-class RouteController extends ActiveController
+class RoutesController extends ActiveController
 {
     public $modelClass = 'common\models\Route';
 
@@ -23,12 +24,14 @@ class RouteController extends ActiveController
      */
     public function init()
     {
+
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         $token = TokenController::getTokenString(Yii::$app->request);
         // проверяем авторизацию пользователя
         if (!TokenController::isTokenValid($token)) {
-            throw new UnauthorizedHttpException();
+            //TODO temporary out (no token)
+            //throw new UnauthorizedHttpException();
         }
     }
 
@@ -65,8 +68,8 @@ class RouteController extends ActiveController
 
         foreach ($userGet as $keys => $val) {
             $users[] = User::find()
-                ->select('uuid')
-                ->where(['id' => $val['id']])
+                ->select('id')
+                ->where(['id' => $val['userId']])
                 ->one();
 
             $userList[] = $users[$keys];
@@ -103,36 +106,33 @@ class RouteController extends ActiveController
      * Action create
      *
      * @return array
+     * @throws InvalidConfigException
      */
-    public function actionCreate()
+    public function actionSend()
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
-        $success = true;
-        $saved = array();
-        $rawData = Yii::$app->getRequest()->getRawBody();
-        $items = json_decode($rawData, true);
+        $request = Yii::$app->request->getBodyParams();
+        $userId = $request['userId'];
+        $items = $request['routes'];
         foreach ($items as $item) {
             $line = new Route();
-            $line->setAttributes($item);
-            $line->userId = $item['userId'];
+            $date = strtotime($item['date']);
+            $line->date = date("Y-m-d H:i:s", $date);
+            $line->latitude = $item['latitude'];
+            $line->longitude = $item['longitude'];
+            $line->userId = $userId;
             try {
-                if ($line->save()) {
-                    $saved[] = [
-                        '_id' => $item['_id'],
-                        'uuid' => $item['userId'],
-                    ];
-                } else {
-                    $success = false;
-                }
+                $line->save();
+
             } catch (Exception $e) {
-                $saved[] = [
-                    '_id' => $item['_id'],
-                    'uuid' => $item['userId'],
-                ];
+                $answer["status_code"] = -1;
+                $answer["message"] = $e->getMessage();
+                return $answer;
             }
         }
-
-        return ['success' => $success, 'data' => $saved];
+        $answer["status_code"] = 0;
+        $answer["message"] = "successfully stored";
+        return $answer;
     }
 }
