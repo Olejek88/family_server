@@ -34,7 +34,7 @@ $fieldOptions2 = [
                     <?php $form = ActiveForm::begin(['id' => 'login-form', 'enableClientValidation' => false]); ?>
 
                     <?= $form
-                        ->field($model, 'username', $fieldOptions1)
+                        ->field($model, 'email', $fieldOptions1)
                         ->label(Yii::t('app', 'Login'))
                         ->textInput(['placeholder' => $model->getAttributeLabel(Yii::t('app', 'Login enter'))]) ?>
 

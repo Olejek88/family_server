@@ -2,7 +2,6 @@
 
 namespace api\controllers;
 
-use common\components\MyHelpers;
 use common\models\User;
 use Yii;
 use yii\base\Controller;
@@ -31,7 +30,7 @@ class UserController extends Controller
         $token = TokenController::getTokenString(Yii::$app->request);
         // проверяем авторизацию пользователя
         if (!TokenController::isTokenValid($token)) {
-            throw new UnauthorizedHttpException();
+            //throw new UnauthorizedHttpException();
         }
     }
 
@@ -85,68 +84,58 @@ class UserController extends Controller
     public function actionUpload()
     {
         if (Yii::$app->request->isPost) {
-            $success = true;
-            $saved = array();
             $params = Yii::$app->request->bodyParams;
             foreach ($params as $item) {
-                $model = User::findOne(['id' => $item['id'], 'email' => $item['email']]);
+                $model = User::findOne(['id' => $item['_id']]);
                 if ($model == null) {
-                    $model = new User();
-                    $model->setAttribute('email', $item['email']);
-                    $model->setAttribute('username', $item['username']);
-                    $model->password_hash = Yii::$app->security->generatePasswordHash($item['password']);
-                    $model->auth_key = Yii::$app->security->generateRandomString();
-                    $model->setAttribute('password', $item['username']);
-                    $model->setAttribute('status', User::STATUS_ACTIVE);
-                    $model->setAttribute('createdAt', MyHelpers::parseFormatDate($item['createdAt']));
-                    $model->setAttribute('changedAt', MyHelpers::parseFormatDate($item['changedAt']));
+                    $answer["status_code"] = -1;
+                    $answer["message"] = "no user found";
+                    return $answer;
                 }
                 $model->setAttribute('username', $item['username']);
                 if ($model->validate()) {
                     if ($model->save(false)) {
-                        // запись для загружаемого файла
-                        $file = Yii::$app->request->getBodyParam('file');
-                        if ($file != null) {
-                            if ($model->load($file, '')) {
-                                $dir = Yii::getAlias('@frontend/web/');
-                                $dir .= $model->getImageDir() . '/' . date('Y-m-d', strtotime($model['createdAt']));
-                                if (!is_dir($dir)) {
-                                    mkdir($dir, 0755, true);
-                                }
-                                // Для последующей валидации используем атрибут модели для загрузки файла
-                                $model->upload = UploadedFile::getInstance($model, 'upload');
-                                if ($model->upload == null) {
-                                    return null;
-                                }
-                                $destination = $dir . '/' . $model['id'];
-                                $fileMoved = $model->upload->saveAs($destination);
-                                if (!$fileMoved) {
-                                    return null;
-                                }
-                                $model->image = $destination;
-                                if (!$model->save(false)) {
-                                    return null;
-                                }
-                            }
-                        }
-                    } else {
-                        $success = false;
+                        $answer["status_code"] = 0;
+                        $answer["message"] = "user successfully saved";
+                        return $answer;
                     }
-                } else {
-                    $success = false;
                 }
             }
-            $answer[] = 0;
-            if ($success) {
-                $answer["status_code"] = 0;
-                $answer["message"] = "user successfully saved";
-            } else {
-                $answer["status_code"] = -1;
-                $answer["message"] = "error";
-            }
+            $answer["status_code"] = -1;
+            $answer["message"] = "error";
             return json_encode($answer);
         } else {
             throw new NotAcceptableHttpException();
         }
+    }
+
+    /**
+     * Метод для загрузки/сохранения атрибутов созданных/изменённых на мобильном клиенте
+     *
+     * @return array
+     */
+    public function actionImage()
+    {
+        if (Yii::$app->request->isPost) {
+            $imageFile = UploadedFile::getInstanceByName('image');
+            $params = Yii::$app->request->bodyParams;
+            $model = User::findOne(['id' => $params['userId']]);
+            $dir = Yii::getAlias('@frontend/web/storage/users');
+            if (!is_dir($dir)) {
+                mkdir($dir, 0755, true);
+            }
+            $destination = $dir . '/' . $imageFile->name;
+            $imageFile->saveAs($destination);
+            $model->image = $imageFile->name;
+            if (!$model->save(false)) {
+                return null;
+            }
+            $answer["status_code"] = 0;
+            $answer["message"] = "user successfully saved";
+            return $answer;
+        }
+        $answer["status_code"] = -1;
+        $answer["message"] = "error";
+        return $answer;
     }
 }
