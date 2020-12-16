@@ -21,6 +21,7 @@ use yii\web\IdentityInterface;
  * @property string $auth_key
  * @property double $last_latitude
  * @property double $last_longitude
+ * @property string $location
  * @property integer $status
  * @property integer $created_at
  * @property integer $updated_at
@@ -179,6 +180,7 @@ class User extends FamilyModel implements IdentityInterface
             [['image'], 'file'],
             [['email'], 'string', 'max' => 50, 'on' => 'default'],
             [['username'], 'string', 'max' => 100],
+            [['location'], 'string', 'max' => 500],
             ['status', 'default', 'value' => self::STATUS_INACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
         ];

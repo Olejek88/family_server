@@ -93,6 +93,12 @@ class UserController extends Controller
                     return $answer;
                 }
                 $model->setAttribute('username', $item['username']);
+                if (isset($item['last_latitude'])) {
+                    $model->setAttribute('last_latitude', $item['last_latitude']);
+                    $model->setAttribute('last_longitude', $item['last_longitude']);
+                    $model->setAttribute('location', $item['location']);
+                }
+
                 if ($model->validate()) {
                     if ($model->save(false)) {
                         $answer["status_code"] = 0;
