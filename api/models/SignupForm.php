@@ -26,7 +26,7 @@ class SignupForm extends Model
             ['username', 'trim'],
             ['username', 'required'],
             ['username', 'unique', 'targetClass' => '\common\models\User',
-                'message' => Yii::t('app', 'Пользователь уже имеет токен.')],
+                'message' => Yii::t('app', 'User already has token.')],
             ['username', 'string', 'min' => 2, 'max' => 255],
 
             ['email', 'trim'],
@@ -34,7 +34,7 @@ class SignupForm extends Model
             ['email', 'email'],
             ['email', 'string', 'max' => 255],
             ['email', 'unique', 'targetClass' => '\common\models\User',
-                'message' => Yii::t('app', 'К этому email уже привязан токен.')],
+                'message' => Yii::t('app', 'Already present user with this email.')],
 
             ['password', 'required'],
             ['password', 'string', 'min' => 3],
