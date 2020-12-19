@@ -113,7 +113,13 @@ class RoutesController extends ActiveController
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         $request = Yii::$app->request->getBodyParams();
-        $userId = $request['userId'];
+        $userLogin = $request['userLogin'];
+        $model = User::findOne(['email' => $userLogin]);
+        if ($model == null) {
+            $answer["status_code"] = -1;
+            $answer["message"] = "no user found";
+            return $answer;
+        }
         $items = $request['routes'];
         foreach ($items as $item) {
             $line = new Route();
@@ -121,7 +127,7 @@ class RoutesController extends ActiveController
             $line->date = date("Y-m-d H:i:s", $date);
             $line->latitude = $item['latitude'];
             $line->longitude = $item['longitude'];
-            $line->userId = $userId;
+            $line->userId = $model['id'];
             try {
                 $line->save();
 

@@ -1,6 +1,5 @@
 <?php
 
-use common\models\User;
 use frontend\models\Role;
 use kartik\file\FileInput;
 use yii\helpers\Html;
@@ -43,25 +42,6 @@ use yii\widgets\ActiveForm;
         '0' => Yii::t('app', 'Удален')];
     echo $form->field($model, 'status')->dropDownList($items);
     echo $form->field($model, 'pass')->passwordInput(['maxlength' => true, 'value' => '']);
-    ?>
-
-    <?php
-    if (Yii::$app->user->can(User::PERMISSION_ADMIN)) {
-        echo $form->field($role, 'role')
-            ->label(Yii::t('app', 'Права пользователя в системе'))
-            ->dropDownList($roleList);
-    } else {
-        echo $form->field($role, 'role')
-            ->hiddenInput(['value' => User::ROLE_USER])
-            ->label(false);
-    }
-    ?>
-
-    <?php
-    echo $form->field($model, 'image')->widget(
-        FileInput::class,
-        ['options' => ['accept' => '*'],]
-    );
     ?>
 
     <div class="form-group text-center">

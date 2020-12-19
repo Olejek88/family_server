@@ -78,7 +78,7 @@ class UserController extends ParentController
         $am = Yii::$app->getAuthManager();
         /** @var User $identity */
         $identity = Yii::$app->user->getIdentity();
-        if (Yii::$app->user->can(User::ROLE_ADMIN) || $identity->user->_id == $id) {
+        if (Yii::$app->user->can(User::ROLE_ADMIN) || $identity['id'] == $id) {
         } else {
             Yii::$app->session->setFlash('warning', '<h3>'
                 . Yii::t('app', 'Не достаточно прав доступа.') . '</h3>');
@@ -100,35 +100,14 @@ class UserController extends ParentController
             }
             $sort_events = MainFunctions::array_msort($events, ['date' => SORT_DESC]);
 
-            $defaultRole = User::ROLE_USER;
-            $userRoles = $am->getRolesByUser($user->id);
-            if (!empty($userRoles)) {
-                foreach ($userRoles as $userRole) {
-                    $defaultRole = $userRole->name;
-                    break;
-                }
-            }
-
-            $role = new Role();
-            // значение по умолчанию
-            $role->role = $defaultRole;
-            $roles = $am->getRoles();
-            $assignments = $am->getAssignments($user->id);
-            foreach ($assignments as $value) {
-                if (key_exists($value->roleName, $roles)) {
-                    $role->role = $value->roleName;
-                    break;
-                }
-            }
-
-            $roleList = ArrayHelper::map($roles, 'name', 'description');
+            $roleList = [];
             return $this->render(
                 'view',
                 [
                     'model' => $user,
                     'user_property' => $user_property,
                     'events' => $sort_events,
-                    'role' => $role,
+                    'role' => "User",
                     'roleList' => $roleList,
                 ]
             );

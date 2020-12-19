@@ -17,14 +17,14 @@ class TokenController extends Controller
     public $enableCsrfValidation = false;
 
     /**
-     * Возвращает токен по Id.
+     * Возвращает токен по userLogin
      *
-     * @param $id
+     * @param $userLogin
      * @return Token Объект токена.
      */
-    public static function getTokenById($id)
+    public static function getTokenByLogin($userLogin)
     {
-        $tokens = Token::find()->where(['id' => $id])->all();
+        $tokens = Token::find()->where(['userLogin' => $userLogin])->all();
         if (count($tokens) > 1) {
             return null;
         } else if (count($tokens) == 1) {
@@ -114,8 +114,8 @@ class TokenController extends Controller
             throw new NotAcceptableHttpException();
         }
 
-        $userId = $request->post('userId');
-        $user = self::getUser($userId);
+        $userLogin = $request->post('userLogin');
+        $user = self::getUserByLogin($userLogin);
         if ($user == null) {
             throw new UnauthorizedHttpException();
         }
@@ -145,6 +145,23 @@ class TokenController extends Controller
         $answer["message"] = "";
         $answer["token"] = $token->accessToken;
         return $answer;
+    }
+
+    /**
+     * @param $userLogin
+     * @return User
+     */
+    public static function getUserByLogin($userLogin)
+    {
+        $condition = null;
+        $users = User::find()->where(['email' => $userLogin])->all();
+        if (count($users) > 1) {
+            return null;
+        } else if (count($users) == 1) {
+            return $users[0];
+        } else {
+            return null;
+        }
     }
 
     /**

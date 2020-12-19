@@ -110,9 +110,8 @@ class SiteController extends Controller
         $leaflet->addLayer($tileLayer);
 
         $subGroupPlugin = new SubgroupCluster();
-        $subGroupPlugin->addSubGroup($layer['usersGroup']);
-        $subGroupPlugin = new SubgroupCluster();
         $subGroupPlugin->addSubGroup($layer['waysGroup']);
+        $subGroupPlugin->addSubGroup($layer['usersGroup']);
         $layers->setOverlays([]);
 
         $layers->setName('ctrlLayer');
@@ -158,13 +157,15 @@ class SiteController extends Controller
         $count = 0;
 
         $coordinates = new LatLng(['lat' => 52.31, 'lng' => 13.24]);
-        foreach ($userData as $user) {
-            $position = new LatLng(['lat' => $user["latitude"], 'lng' => $user["longitude"]]);
-            $coordinates = $position;
-            $marker = new Marker(['latLng' => $position, 'popupContent' => '<b>'
-                . $user["username"] . '</b>']);
-            $marker->setIcon($userIcon);
-            $usersGroup->addLayer($marker);
+        foreach ($users as $user) {
+            if ($user["last_latitude"]) {
+                $position = new LatLng(['lat' => $user["last_latitude"], 'lng' => $user["last_longitude"]]);
+                $coordinates = $position;
+                $marker = new Marker(['latLng' => $position, 'popupContent' => '<b>'
+                    . $user["username"] . '</b>']);
+                $marker->setIcon($userIcon);
+                $usersGroup->addLayer($marker);
+            }
         }
 
         foreach ($users as $current_user) {

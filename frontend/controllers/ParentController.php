@@ -43,6 +43,7 @@ class ParentController extends Controller
      */
     public function beforeAction($action)
     {
+        return true;
         if (parent::beforeAction($action)) {
             $access = false;
             try {

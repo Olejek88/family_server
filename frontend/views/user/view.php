@@ -41,7 +41,7 @@ $this->title = Yii::t('app', 'Профиль пользователя') . " " . 
                         echo '<img class="profile-user-img img-responsive img-circle" src="' . Html::encode($path) . '">';
                         ?>
                         <h3 class="profile-username text-center"><?php echo $model['username'] ?></h3>
-                        <p class="text-muted text-center"><?php echo $model['name'] ?></p>
+                        <p class="text-muted text-center"><?php echo $model['username'] ?></p>
                     </div>
                 </div>
 
@@ -59,19 +59,6 @@ $this->title = Yii::t('app', 'Профиль пользователя') . " " . 
                         else echo '<span class="label label-danger">' . Yii::t('app', 'Не активен') . '</span>';
                         ?>
                         <br/>
-                        <br/>
-                        <strong><i class="fa fa-users margin-r-5"></i><?php echo Yii::t('app', 'Роль') ?>
-                        </strong>
-                        <?php
-                        $assignments = Yii::$app->getAuthManager()->getAssignments($model['id']);
-                        foreach ($assignments as $value) {
-                            if ($value->roleName == User::ROLE_ADMIN)
-                                echo '<span class="label label-danger">' . Yii::t('app', 'Администратор') . '</span>';
-                            if ($value->roleName == User::ROLE_USER)
-                                echo '<span class="label label-success">' . Yii::t('app', 'Пользователь') . '</span>';
-                            break;
-                        }
-                        ?>
                     </div>
                 </div>
             </div><!---->

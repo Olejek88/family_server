@@ -54,7 +54,7 @@ class FamilyController extends Controller
         Yii::$app->response->format = Response::FORMAT_JSON;
         if (Yii::$app->request->isPost) {
             $params = Yii::$app->request->bodyParams;
-            $model = User::findOne(['id' => $params['userId']]);
+            $model = User::findOne(['email' => $params['userLogin']]);
             if ($model == null) {
                 $answer["status_code"] = -1;
                 $answer["message"] = "no user found";
