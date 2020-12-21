@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use common\components\MainFunctions;
 use common\models\Family;
 use common\models\FamilyUser;
 use common\models\User;
@@ -183,25 +184,45 @@ class FamilyController extends ParentController
             /** @var FamilyUser[] $users */
             $users = FamilyUser::find()
                 ->where(['familyUuid' => $family['uuid']])
-                ->orderBy('title')
                 ->all();
             foreach ($users as $user) {
                 $childIdx = count($fullTree['children']) - 1;
-                if (!$user->user->deleted) {
+                if ($user->user->status == 10) {
                     $links = Html::a('<span class="fa fa-th"></span>&nbsp',
-                        ['/user/map', 'uuid' => $user['id']]
+                        ['/user/map', 'id' => $user->user['id']]
                     );
                     $fullTree['children'][$childIdx]['children'][] = [
-                        'title' => $user['username'],
-                        'key' => $user['id'],
+                        'title' => $user->user['username'],
+                        'key' => $user->user['id'],
                         'type' => 'user',
                         'links' => $links,
+                        'latitude' => $user->user['last_latitude'],
+                        'longitude' => $user->user['last_longitude'],
+                        'email' => $user->user['email'],
                         'expanded' => true,
                         'folder' => false
                     ];
                 }
             }
         }
+
+        $users = User::find()
+            ->orderBy('username')
+            ->all();
+        foreach ($users as $user) {
+            $fullTree['children'][] = [
+                'title' => $user['username'],
+                'latitude' => $user['last_latitude'],
+                'longitude' => $user['last_longitude'],
+                'email' => $user['email'],
+                'key' => $user['id'],
+                'type' => 'user',
+                'links' => "",
+                'expanded' => true,
+                'folder' => false
+            ];
+        }
+
         return $this->render(
             'tree',
             [
@@ -225,11 +246,16 @@ class FamilyController extends ParentController
             if ($currentFamily) {
                 $object_uuid = $currentFamily['uuid'];
                 $user = new User();
-                return $this->renderAjax('../family/_add_user', [
+                return $this->renderAjax('../user/_edit_users', [
                     'model' => $user,
-                    'object_uuid' => $object_uuid
+                    'family_uuid' => $object_uuid
                 ]);
             }
+        } else {
+            $family = new Family();
+            return $this->renderAjax('../family/_add_form', [
+                'model' => $family
+            ]);
         }
         return null;
     }
@@ -269,6 +295,7 @@ class FamilyController extends ParentController
         else
             $model = new Family();
         if ($model->load(Yii::$app->request->post())) {
+            $model->deleted = 0;
             if ($model->save(false)) {
                 return $this->redirect(parse_url($_SERVER["HTTP_REFERER"], PHP_URL_PATH) . '?node=' . $model['_id'] . 'k');
             } else {
@@ -306,5 +333,55 @@ class FamilyController extends ParentController
     function actionDashboard()
     {
         return null;
+    }
+
+    /**
+     * @return mixed
+     * @throws \Exception
+     */
+    public
+    function actionUserCopy()
+    {
+        if (isset($_POST["from"]) && isset($_POST["to"])) {
+            /** @var Family $family */
+            $family = null;
+            if (isset($_POST["to"]))
+                $family = Family::find()->where(['_id' => $_POST["to"]])->one();
+            /** @var User $user */
+            $user = User::find()->where(['email' => $_POST["from"]])->one();
+
+            if ($user && $family) {
+                $familyUser = FamilyUser::find()
+                    ->where(['familyUuid' => $family->uuid])
+                    ->andWhere(['userId' => $user->id])
+                    ->one();
+                if (!$familyUser) {
+                    $newFamilyUser = new FamilyUser();
+                    $newFamilyUser->uuid = MainFunctions::GUID();
+                    $newFamilyUser->userId = $user->id;
+                    $newFamilyUser->familyUuid = $family->uuid;
+                    $newFamilyUser->createdAt = date("Y-m-d H:i:s");
+                    $newFamilyUser->changedAt = date("Y-m-d H:i:s");
+                    $newFamilyUser->save();
+                    if ($newFamilyUser->_id) {
+                        $return['code'] = 0;
+                        $return['message']['_id'] = $user->id;
+                        $return['message']['data'] = $user;
+                        $return['message']['title'] = $user->username;
+                        return json_encode($return);
+                    }
+                } else {
+                    $return['code'] = -1;
+                    $return['message'] = 'User already present';
+                    return json_encode($return);
+                }
+                $return['code'] = -1;
+                $return['message'] = 'Не удалось создать пользователя' . json_encode($newFamilyUser->errors);
+                return json_encode($return);
+            }
+        }
+        $return['code'] = -1;
+        $return['message'] = 'Неправильно заданы параметры';
+        return json_encode($return);
     }
 }

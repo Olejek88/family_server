@@ -1,7 +1,5 @@
 <?php
-/* @var $object Family */
-
-/* @var $object_uuid */
+/* @var $model Family */
 
 use common\components\MainFunctions;
 use common\models\Family;
@@ -23,20 +21,17 @@ use yii\helpers\Html;
 </div>
 <div class="modal-body">
     <?php
-    if ($object['uuid']) {
-        echo Html::hiddenInput("objectUuid", $object['uuid']);
-        echo $form->field($object, 'uuid')
-            ->hiddenInput(['value' => $object['uuid']])
+    if ($model['uuid']) {
+        echo $form->field($model, 'uuid')
+            ->hiddenInput(['value' => $model['uuid']])
             ->label(false);
     } else {
-        echo $form->field($object, 'uuid')
+        echo $form->field($model, 'uuid')
             ->hiddenInput(['value' => MainFunctions::GUID()])
             ->label(false);
     }
-
-
-    echo $form->field($object, 'title')->textInput(['maxlength' => true]);
-    echo $form->field($object, 'deleted')->hiddenInput(['value' => 0])->label(false);
+    echo $form->field($model, 'deleted')->hiddenInput(['value' => 0])->label(false);
+    echo $form->field($model, 'title')->textInput(['maxlength' => true]);
     ?>
 
 </div>

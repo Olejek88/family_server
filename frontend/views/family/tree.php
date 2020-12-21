@@ -12,6 +12,7 @@ $this->title = Yii::t('app', 'Family Tree');
     <table id="tree" style="width: 100%">
         <colgroup>
             <col width="*">
+            <col width="200px">
             <col width="120px">
             <col width="120px">
             <col width="90px">
@@ -46,6 +47,7 @@ $this->title = Yii::t('app', 'Family Tree');
         </tr>
         <tr>
             <th align="center"><?php echo Yii::t('app', 'Family') ?></th>
+            <th><?php echo Yii::t('app', 'e-mail') ?></th>
             <th><?php echo Yii::t('app', 'Longitude') ?></th>
             <th><?php echo Yii::t('app', 'Latitude') ?></th>
             <th><?php echo Yii::t('app', 'S') ?></th>
@@ -84,80 +86,50 @@ echo FancytreeWidget::widget(
             'selectMode' => 2,
             'quicksearch' => true,
             'autoScroll' => true,
-            'extensions' => ['table', 'contextMenu', 'filter'],
+            'extensions' => ['dnd', 'table', 'contextMenu', 'filter'],
+            'dnd' => [
+                'preventVoidMoves' => true,
+                'preventRecursiveMoves' => false,
+                'preventSameParent' => false,
+                'preventRecursion' => false,
+                'autoExpandMS' => 400,
+                'dragStart' => new JsExpression('function(node, data) {                                                                                                                                     
+                                return true;                                                                                                                                                                
+                        }'),
+                'dragEnter' => new JsExpression('function(node, data) {                                                                                                                                     
+                                return true;                                                                                                                                                                
+                        }'),
+                'dragDrop' => new JsExpression('function(node, data) {                                                                                                                                      
+                    if (data.otherNode.selected) {                                                                                                                                              
+                        $.ajax({                                                                                                                                                                
+                            url: "../family/user-copy",                                                                                                                                                 
+                            type: "post",                                                                                                                                                                       
+                            data: {                                                                                                                                                         
+                                from: data.otherNode.data.email,                                                                                                                                 
+                                to: node.key                                                                                                                                     
+                        },                                                                                                                                                                                  
+                        success: function (code) {                                                                                                                                                          
+                            var message = JSON.parse(code);                                                                                                                                                 
+                                 if (message.code == 0) {                                                                                                                                        
+                                      newNode = data.otherNode.copyTo(node, data.hitMode);                                                                                                            
+                                      console.log(message);                                                                                                                                           
+                                      newNode.data.uuid = message.message.uuid;                                                                                                                       
+                                      newNode.data.key = message.message._id;                                                                                                                         
+                                      newNode.key = message.message._id;                                                                                                                              
+                                      newNode.setTitle(message.message.title);                                                                                                                        
+                                      newNode.data = message.message.data;                                                                                                                            
+                                      newNode.render(true);                                                                                                                                           
+                                 }                                                                                                                                                               
+                                 else {                                                                                                                                                          
+                                      alert (message.message);                                                                                                                                    
+                                 }                                                                                                                                                               
+                        }                                                                                                                                                                                   
+                    });                                                                                                                                                                                     
+                }                                                                                                                                                                                           
+                        }'),
+            ],
             'contextMenu' => [
                 'menu' => [
-                    'new' => [
-                        'name' => Yii::t('app', 'Добавить новый'),
-                        'icon' => 'add',
-                        'callback' => new JsExpression('function(key, opt) {
-                        var node = $.ui.fancytree.getNode(opt.$trigger);
-                        if (node.folder==true) {
-                            $.ajax({
-                                url: "new",
-                                type: "post",
-                                data: {
-                                    selected_node: node.key,
-                                    folder: node.folder,
-                                    uuid: node.data.uuid
-                                },
-                                success: function (data) { 
-                                    $(\'#modalAdd\').modal(\'show\');
-                                    $(\'#modalContent\').html(data);
-                                }
-                           }); 
-                        }                        
-                    }')
-                    ],
-                    'edit' => [
-                        'name' => Yii::t('app', 'Редактировать'),
-                        'icon' => 'edit',
-                        'callback' => new JsExpression('function(key, opt) {
-                        var node = $.ui.fancytree.getNode(opt.$trigger);
-                        if (node.folder==true) {
-                            $.ajax({
-                                url: "edit",
-                                type: "post",
-                                data: {
-                                    selected_node: node.key,
-                                    folder: node.folder,
-                                    uuid: node.data.uuid,
-                                    type: node.type,
-                                    type_uuid: node.data.type_uuid
-                                },
-                                success: function (data) { 
-                                    $(\'#modalAdd\').modal(\'show\');
-                                    $(\'#modalContent\').html(data);
-                                }
-                           }); 
-                        } else {
-                            $.ajax({
-                                url: "../object/edit",
-                                type: "post",
-                                data: {
-                                    selected_node: node.key,
-                                    folder: node.folder,
-                                    uuid: node.data.uuid,
-                                    type: node.type,                                },
-                                success: function (data,status, request) {
-                                    let isJson = true;
-                                    try {
-                                        JSON.parse(data);
-                                    } catch(e) {
-                                        isJson = false;
-                                    }
-                                    if (isJson) {
-                                        var message = JSON.parse(data);
-                                        alert(message.message);
-                                    } else {
-                                        $(\'#modalAdd\').modal(\'show\');
-                                        $(\'#modalContent\').html(data);
-                                    }
-                                }
-                            });  
-                        }                       
-                    }')
-                    ],
                     'delete' => [
                         'name' => Yii::t('app', 'Удалить'),
                         'icon' => "delete",
@@ -192,15 +164,16 @@ echo FancytreeWidget::widget(
             'table' => [
                 'indentation' => 20,
                 "titleColumnIdx" => "1",
-                "longitudeColumnIdx" => "2",
-                "latitudeColumnIdx" => "3",
-                "linksColumnIdx" => "4",
+                "emailColumnIdx" => "2",
+                "longitudeColumnIdx" => "3",
+                "latitudeColumnIdx" => "4",
+                "linksColumnIdx" => "5",
             ],
             'renderColumns' => new JsExpression(
                 'function(event, data) {
                     var node = data.node;
                     $tdList = $(node.tr).find(">td");
-                    $tdList.eq(1).text(node.data.type_title);
+                    $tdList.eq(1).html(node.data.email);           
                     $tdList.eq(2).html(node.data.latitude);           
                     $tdList.eq(3).html(node.data.longitude);
                     $tdList.eq(4).html(node.data.links);
@@ -271,13 +244,6 @@ $this->registerJs('
             tmp = item.split("=");
             if (tmp[0] === "node") {
                 $.ui.fancytree.getTree().activateKey(decodeURIComponent(tmp[1]));
-                var node = $.ui.fancytree.getTree("#tree").getActiveNode();
-                node.setFocus();
-                node.setExpanded(true).then(()=>{
-                      node.span.scrollIntoView(true);
-                      var viewportH = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-                      window.scrollBy(0, -viewportH/2);       
-                });
             }            
         });
 ');

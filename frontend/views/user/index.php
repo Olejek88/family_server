@@ -57,26 +57,6 @@ $gridColumns = [
         }
     ],
     [
-        'contentOptions' => [
-            'class' => 'table_class'
-        ],
-        'header' => Yii::t('app', 'Права доступа'),
-        'hAlign' => 'center',
-        'mergeHeader' => true,
-        'headerOptions' => ['class' => 'text-center'],
-        'content' => function ($data) {
-            $assignments = Yii::$app->getAuthManager()->getAssignments($data['id']);
-            $rights = '';
-            foreach ($assignments as $value) {
-                if ($value->roleName == User::ROLE_ADMIN)
-                    $rights .= '<span class="label label-danger">' . Yii::t('app', 'Администратор') . '</span>';
-                if ($value->roleName == User::ROLE_USER)
-                    $rights .= '<span class="label label-success">' . Yii::t('app', 'Пользователь') . '</span>';
-            }
-            return $rights;
-        }
-    ],
-    [
         'class' => 'kartik\grid\EditableColumn',
         'hAlign' => 'center',
         'vAlign' => 'middle',

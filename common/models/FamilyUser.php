@@ -87,7 +87,7 @@ class FamilyUser extends FamilyModel
      */
     public function getUser()
     {
-        return $this->hasOne(User::class, ['uuid' => 'userId']);
+        return $this->hasOne(User::class, ['id' => 'userId']);
     }
 
     /**

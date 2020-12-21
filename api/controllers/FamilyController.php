@@ -60,8 +60,22 @@ class FamilyController extends Controller
                 $answer["message"] = "no user found";
                 return $answer;
             }
-            $familyUsers = FamilyUser::find()->where(['userId' => $model['id']])->all();
-            return $familyUsers;
+            // TODO just one family
+            $familyUser = FamilyUser::find()->where(['userId' => $model['id']])->one();
+            if ($familyUser) {
+                $familyUsers = FamilyUser::find()
+                    ->where(['familyUuid' => $familyUser['familyUuid']])
+                    ->andWhere(['!=', 'userId', $model['id']])
+                    ->all();
+                $users = array();
+                foreach ($familyUsers as $familyUser) {
+                    $users[] = $familyUser->user;
+                }
+                return $users;
+            }
+            $answer["status_code"] = 0;
+            $answer["message"] = "no users in family";
+            return $answer;
         }
         $answer["status_code"] = -1;
         $answer["message"] = "no post request";

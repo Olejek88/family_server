@@ -86,7 +86,7 @@ class UserController extends Controller
         if (Yii::$app->request->isPost) {
             $params = Yii::$app->request->bodyParams;
             foreach ($params as $item) {
-                $model = User::findOne(['email' => $item['userLogin']]);
+                $model = User::findOne(['email' => $item['login']]);
                 if ($model == null) {
                     $answer["status_code"] = -1;
                     $answer["message"] = "no user found";
@@ -125,7 +125,7 @@ class UserController extends Controller
         if (Yii::$app->request->isPost) {
             $imageFile = UploadedFile::getInstanceByName('image');
             $params = Yii::$app->request->bodyParams;
-            $model = User::findOne(['email' => $params['userLogin']]);
+            $model = User::findOne(['email' => $params['login']]);
             $dir = Yii::getAlias('@frontend/web/storage/users');
             if (!is_dir($dir)) {
                 mkdir($dir, 0755, true);
