@@ -94,6 +94,7 @@ class SiteController extends Controller
             $answer["message"] = "user successfully login";
             $answer["email"] = $user->email;
             $answer["user_name"] = $user->username;
+            $answer["password"] = $user->password;
             $answer["access_token"] = $user->verification_token;
             return json_encode($answer);
         }
